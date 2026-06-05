@@ -71,7 +71,7 @@ def execute_query_with_failover_handling(query_func):
             return query_func()
 ```
 
-For a complete example, see [MySQLSQLAlchemyFailover.py](../examples/MySQLSQLAlchemyFailover.py).
+For complete examples, see [MySQLSQLAlchemyFailover.py](../examples/MySQLSQLAlchemyFailover.py) and [PGSQLAlchemyFailover.py](../examples/PGSQLAlchemyFailover.py).
 
 ### Plugin Compatibility
 
