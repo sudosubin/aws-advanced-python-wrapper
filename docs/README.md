@@ -9,6 +9,8 @@
   - [Database Dialects](using-the-python-wrapper/DatabaseDialects.md)
   - [Driver Dialects](using-the-python-wrapper/DriverDialects.md)
   - [Cluster ID](using-the-python-wrapper/ClusterId.md)
+  - [SQLAlchemy Support](using-the-python-wrapper/SqlAlchemySupport.md)
+  - [Django Support](using-the-python-wrapper/DjangoSupport.md)
   - [Telemetry](using-the-python-wrapper/Telemetry.md)
     - [Plugins](using-the-python-wrapper/UsingThePythonWrapper.md#plugins)
       - [Failover Plugin](using-the-python-wrapper/using-plugins/UsingTheFailoverPlugin.md)

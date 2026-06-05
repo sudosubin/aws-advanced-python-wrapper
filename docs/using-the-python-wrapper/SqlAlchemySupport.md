@@ -1,7 +1,6 @@
 # SQLAlchemy ORM Support
 
-> [!IMPORTANT]
-> SQLAlchemy ORM support is currently only available for **MySQL databases**.
+SQLAlchemy ORM support is available for both **MySQL** and **PostgreSQL** databases.
 
 The AWS Advanced Python Wrapper provides a custom SQLAlchemy database backend that enables SQLAlchemy applications to leverage AWS and Aurora functionalities such as failover handling and IAM authentication.
 
@@ -16,7 +15,11 @@ To use the AWS Advanced Python Wrapper with SQLAlchemy, call the `create_engine`
 ```python
 from sqlalchemy import create_engine
 
+# MySQL
 create_engine("mysql+aws_wrapper_mysqlconnector://your_username:your_password@your-cluster-endpoint.cluster-xyz.us-east-1.rds.amazonaws.com:your_port/your_database_name?connect_timeout=10&wrapper_plugins=aurora_connection_tracker%2Cfailover_v2")
+
+# PostgreSQL
+create_engine("postgresql+aws_wrapper_psycopg://your_username:your_password@your-cluster-endpoint.cluster-xyz.us-east-1.rds.amazonaws.com:your_port/your_database_name?connect_timeout=10&wrapper_plugins=aurora_connection_tracker%2Cfailover_v2")
 ```
 
 See [the SQLALchemy official documentation](https://docs.sqlalchemy.org/en/20/core/engines.html) for more information on engine configuration.
@@ -26,8 +29,12 @@ See [the SQLALchemy official documentation](https://docs.sqlalchemy.org/en/20/co
 | Driver | Database Dialect |
 |-------------------|------------------|
 | `aws_wrapper_mysqlconnector` | `mysql` |
+| `aws_wrapper_psycopg` | `postgresql` |
 
-Ensure what is passed to create_engine always starts with `"mysql+aws_wrapper_mysqlconnector:..."`. Further setting of the database dialect within the wrapper can be done with the `wrapper_dialect` parameter, for more details see: [Database Dialects](https://github.com/aws/aws-advanced-python-wrapper/blob/main/docs/using-the-python-wrapper/DatabaseDialects.md).
+Ensure what is passed to create_engine always starts with `"mysql+aws_wrapper_mysqlconnector:..."` or `"postgresql+aws_wrapper_psycopg:..."`. Further setting of the database dialect within the wrapper can be done with the `wrapper_dialect` parameter, for more details see: [Database Dialects](https://github.com/aws/aws-advanced-python-wrapper/blob/main/docs/using-the-python-wrapper/DatabaseDialects.md).
+
+> [!NOTE]
+> The PostgreSQL dialect does not register psycopg's native `hstore` adapter, and `isolation_level` set on a connection is not restored after a failover (autocommit and read-only state are). Set the isolation level per-transaction if you need it to survive failover.
 
 ## Using Plugins with SQLAlchemy
 
@@ -63,7 +70,7 @@ def execute_query_with_failover_handling(query_func):
             return query_func()
 ```
 
-For a complete example, see [MySQLSQLAlchemyFailover.py](../examples/MySQLSQLAlchemyFailover.py).
+For complete examples, see [MySQLSQLAlchemyFailover.py](../examples/MySQLSQLAlchemyFailover.py) and [PostgreSQLSQLAlchemyFailover.py](../examples/PostgreSQLSQLAlchemyFailover.py).
 
 ### Plugin Compatibility
 

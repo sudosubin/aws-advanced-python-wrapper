@@ -117,6 +117,12 @@ class Book(Base):
 
     author: Mapped[Author] = relationship(back_populates='books')
 
+def _aws_wrapper_drivername(engine: DatabaseEngine) -> str:
+    if engine == DatabaseEngine.PG:
+        return "postgresql+aws_wrapper_psycopg"
+    return "mysql+aws_wrapper_mysqlconnector"
+
+
 def _build_url(user, password, host, port, dbname, wrapper_plugins=None, **extra_options):
     """Build a SQLAlchemy connection URL using the aws wrapper dialect."""
     query_params = {}
@@ -131,7 +137,7 @@ def _build_url(user, password, host, port, dbname, wrapper_plugins=None, **extra
 
     from sqlalchemy.engine import URL
     return URL.create(
-        drivername="mysql+aws_wrapper_mysqlconnector",
+        drivername=_aws_wrapper_drivername(TestEnvironment.get_current().get_engine()),
         username=user,
         password=password,
         host=host,
@@ -140,7 +146,7 @@ def _build_url(user, password, host, port, dbname, wrapper_plugins=None, **extra
         query=query_params,
     )
 
-@enable_on_engines([DatabaseEngine.MYSQL])
+@enable_on_engines([DatabaseEngine.MYSQL, DatabaseEngine.PG])
 @enable_on_deployments([DatabaseEngineDeployment.AURORA, DatabaseEngineDeployment.RDS_MULTI_AZ_CLUSTER])
 @disable_on_features([TestEnvironmentFeatures.RUN_AUTOSCALING_TESTS_ONLY,
                       TestEnvironmentFeatures.BLUE_GREEN_DEPLOYMENT,

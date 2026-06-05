@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/#semantic-versioning-200).
 
+## [Unreleased]
+
+### :magic_wand: Added
+* [SQLAlchemy support for PostgreSQL](https://github.com/aws/aws-advanced-python-wrapper/blob/main/docs/using-the-python-wrapper/SqlAlchemySupport.md).
+
 ## [3.0.0] - 2026-06-02
 
 ### :crab: Breaking Changes
