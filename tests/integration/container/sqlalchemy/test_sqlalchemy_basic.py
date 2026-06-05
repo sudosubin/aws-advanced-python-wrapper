@@ -109,7 +109,13 @@ class Book(Base):
 
     author: Mapped[Author] = relationship(back_populates='books')
 
-@enable_on_engines([DatabaseEngine.MYSQL])  # MySQL Specific until PG is implemented
+def _aws_wrapper_drivername(engine: DatabaseEngine) -> str:
+    if engine == DatabaseEngine.PG:
+        return "postgresql+aws_wrapper_psycopg"
+    return "mysql+aws_wrapper_mysqlconnector"
+
+
+@enable_on_engines([DatabaseEngine.MYSQL, DatabaseEngine.PG])
 @enable_on_deployments([DatabaseEngineDeployment.AURORA, DatabaseEngineDeployment.RDS_MULTI_AZ_CLUSTER])
 @disable_on_features([TestEnvironmentFeatures.RUN_AUTOSCALING_TESTS_ONLY,
                       TestEnvironmentFeatures.BLUE_GREEN_DEPLOYMENT,
@@ -117,7 +123,8 @@ class Book(Base):
 class TestSqlAlchemy:
     @pytest.fixture(scope="function")
     def engine(self, conn_utils):
-        conn_str = f'mysql+aws_wrapper_mysqlconnector://{conn_utils.user}:{conn_utils.password}@{conn_utils.writer_cluster_host}:{conn_utils.port}/{conn_utils.dbname}'
+        drivername = _aws_wrapper_drivername(TestEnvironment.get_current().get_engine())
+        conn_str = f'{drivername}://{conn_utils.user}:{conn_utils.password}@{conn_utils.writer_cluster_host}:{conn_utils.port}/{conn_utils.dbname}'
         engine = create_engine(conn_str)
         Base.metadata.create_all(engine)
         yield engine
