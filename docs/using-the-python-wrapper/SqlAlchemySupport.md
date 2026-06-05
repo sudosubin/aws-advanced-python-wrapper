@@ -1,7 +1,6 @@
 # SQLAlchemy ORM Support
 
-> [!IMPORTANT]
-> SQLAlchemy ORM support is available for **MySQL** and **PostgreSQL** databases.
+SQLAlchemy ORM support is available for both **MySQL** and **PostgreSQL** databases.
 
 The AWS Advanced Python Wrapper provides a custom SQLAlchemy database backend that enables SQLAlchemy applications to leverage AWS and Aurora functionalities such as failover handling and IAM authentication.
 
@@ -71,7 +70,7 @@ def execute_query_with_failover_handling(query_func):
             return query_func()
 ```
 
-For complete examples, see [MySQLSQLAlchemyFailover.py](../examples/MySQLSQLAlchemyFailover.py) and [PGSQLAlchemyFailover.py](../examples/PGSQLAlchemyFailover.py).
+For complete examples, see [MySQLSQLAlchemyFailover.py](../examples/MySQLSQLAlchemyFailover.py) and [PostgreSQLSQLAlchemyFailover.py](../examples/PostgreSQLSQLAlchemyFailover.py).
 
 ### Plugin Compatibility
 

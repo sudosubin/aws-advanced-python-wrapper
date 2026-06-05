@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 ### :magic_wand: Added
-* [SQLAlchemy ORM support for PostgreSQL](https://github.com/aws/aws-advanced-python-wrapper/blob/main/docs/using-the-python-wrapper/SqlAlchemySupport.md) via the `postgresql+aws_wrapper_psycopg` dialect.
+* [SQLAlchemy support for PostgreSQL](https://github.com/aws/aws-advanced-python-wrapper/blob/main/docs/using-the-python-wrapper/SqlAlchemySupport.md).
 
 ## [3.0.0] - 2026-06-02
 
