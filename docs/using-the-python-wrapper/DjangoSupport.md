@@ -1,13 +1,13 @@
 # Django ORM Support
 
-> [!IMPORTANT]
-> Django ORM support is currently only available for **MySQL databases**.
+Django ORM support is available for both **MySQL** and **PostgreSQL** databases.
 
 The AWS ADvanced Python Wrapper provides a custom Django database backend that enables Django applications to leverage AWS and Aurora functionalities such as failover handling, IAM authentication, and read/write splitting.
 
 ## Prerequisites
 
-- Django 3.2+
+- MySQL: Django 3.2+
+- PostgreSQL: Django 4.2+ (the PostgreSQL backend uses `psycopg` version 3)
 
 ## Basic Configuration
 
@@ -31,11 +31,18 @@ DATABASES = {
 }
 ```
 
+> [!NOTE]
+> The examples in this document use the MySQL engine. For PostgreSQL, use the `postgresql` engine value (see [Supported Engines](#supported-engines)) and the PostgreSQL port (`5432`).
+
 ### Supported Engines
 
 | Underlying Driver | Database Dialect | Engine Value |
 |-------------------|------------------|-------------|
 | `mysql-connector-python` | MySQL | `'aws_advanced_python_wrapper.django.backends.mysql_connector'` |
+| `psycopg` (version 3) | PostgreSQL | `'aws_advanced_python_wrapper.django.backends.postgresql'` |
+
+> [!NOTE]
+> Named (server-side) cursors — used, for example, by `QuerySet.iterator()` with a `chunk_size` — operate directly on the underlying `psycopg` connection. As a result, queries run through a server-side cursor are not processed by the wrapper's plugin pipeline.
 
 
 ### OPTIONS Properties
@@ -89,7 +96,7 @@ def execute_query_with_failover_handling(query_func):
         return query_func()
 ```
 
-For a complete example, see [MySQLDjangoFailover.py](../examples/MySQLDjangoFailover.py).
+For complete examples, see [MySQLDjangoFailover.py](../examples/MySQLDjangoFailover.py) and [PostgreSQLDjangoFailover.py](../examples/PostgreSQLDjangoFailover.py).
 
 For more information about the Failover Plugin, see the [Failover Plugin documentation](./using-plugins/UsingTheFailoverPlugin.md).
 
@@ -215,7 +222,7 @@ By default, the Read/Write Splitting Plugin randomly selects a reader instance. 
 }
 ```
 
-For a complete example including connection pooling, see [MySQLDjangoReadWriteSplitting.py](../examples/MySQLDjangoReadWriteSplitting.py).
+For complete examples including connection pooling, see [MySQLDjangoReadWriteSplitting.py](../examples/MySQLDjangoReadWriteSplitting.py) and [PostgreSQLDjangoReadWriteSplitting.py](../examples/PostgreSQLDjangoReadWriteSplitting.py).
 
 For a list of available connection strategies, see the [Read/Write Splitting Plugin documentation](./using-plugins/UsingTheReadWriteSplittingPlugin.md#connection-strategies).
 

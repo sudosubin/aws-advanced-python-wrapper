@@ -11,15 +11,3 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
-from ..utils.database_engine import DatabaseEngine
-from ..utils.test_environment import TestEnvironment
-
-_DJANGO_BACKENDS = {
-    DatabaseEngine.MYSQL: 'aws_advanced_python_wrapper.django.backends.mysql_connector',
-    DatabaseEngine.PG: 'aws_advanced_python_wrapper.django.backends.postgresql',
-}
-
-
-def get_django_backend() -> str:
-    return _DJANGO_BACKENDS[TestEnvironment.get_current().get_engine()]
