@@ -89,6 +89,14 @@ class AwsWrapperConnection(Connection, CanReleaseResources):
         return self._plugin_service.driver_dialect.is_closed(self.target_connection)
 
     @property
+    def info(self):
+        return self.target_connection.info
+
+    @property
+    def adapters(self):
+        return self.target_connection.adapters
+
+    @property
     def read_only(self) -> bool:
         return self._plugin_manager.execute(
             self.target_connection,
@@ -270,6 +278,10 @@ class AwsWrapperCursor(Cursor):
     @property
     def arraysize(self) -> int:
         return self.target_cursor.arraysize
+
+    @property
+    def adapters(self):
+        return self.target_cursor.adapters
 
     # Optional for PEP249
     @property

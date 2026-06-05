@@ -40,9 +40,10 @@ from ..utils.database_engine import DatabaseEngine
 from ..utils.database_engine_deployment import DatabaseEngineDeployment
 from ..utils.test_environment import TestEnvironment
 from ..utils.test_environment_features import TestEnvironmentFeatures
+from . import get_django_backend
 
 
-@enable_on_engines([DatabaseEngine.MYSQL])  # Django backends are MySQL-specific
+@enable_on_engines([DatabaseEngine.MYSQL, DatabaseEngine.PG])
 @enable_on_deployments([DatabaseEngineDeployment.AURORA, DatabaseEngineDeployment.RDS_MULTI_AZ_CLUSTER])
 @disable_on_features([TestEnvironmentFeatures.RUN_AUTOSCALING_TESTS_ONLY,
                       TestEnvironmentFeatures.BLUE_GREEN_DEPLOYMENT,
@@ -70,7 +71,7 @@ class TestDjangoPlugins:
 
         secret_name = f"TestSecret-{uuid.uuid4()}"
 
-        engine = "postgres" if env.get_engine() == "pg" else "mysql"
+        engine = "postgres" if env.get_engine() == DatabaseEngine.PG else "mysql"
         secret_value = {
             "engine": engine,
             "dbname": env.get_info().get_database_info().get_default_db_name(),
@@ -356,7 +357,7 @@ class TestDjangoPlugins:
         # Configure Django settings
         if not settings.configured:
             db_config = {
-                'ENGINE': 'aws_advanced_python_wrapper.django.backends.mysql_connector',
+                'ENGINE': get_django_backend(),
                 'NAME': conn_utils.dbname,
                 "USER": user,
                 "PASSWORD": password,
@@ -702,7 +703,7 @@ class TestDjangoPlugins:
         # Configure Django with two database connections
         if not settings.configured:
             db_config_writer = {
-                'ENGINE': 'aws_advanced_python_wrapper.django.backends.mysql_connector',
+                'ENGINE': get_django_backend(),
                 'NAME': conn_utils.dbname,
                 'USER': conn_utils.user,
                 'PASSWORD': conn_utils.password,
@@ -716,7 +717,7 @@ class TestDjangoPlugins:
             }
 
             db_config_reader = {
-                'ENGINE': 'aws_advanced_python_wrapper.django.backends.mysql_connector',
+                'ENGINE': get_django_backend(),
                 'NAME': conn_utils.dbname,
                 'USER': conn_utils.user,
                 'PASSWORD': conn_utils.password,
@@ -747,7 +748,7 @@ class TestDjangoPlugins:
         else:
             # Update existing settings without overwriting
             settings.DATABASES['default'].update({
-                'ENGINE': 'aws_advanced_python_wrapper.django.backends.mysql_connector',
+                'ENGINE': get_django_backend(),
                 'NAME': conn_utils.dbname,
                 'USER': conn_utils.user,
                 'PASSWORD': conn_utils.password,
@@ -774,7 +775,7 @@ class TestDjangoPlugins:
                 })
             else:
                 settings.DATABASES['read'].update({
-                    'ENGINE': 'aws_advanced_python_wrapper.django.backends.mysql_connector',
+                    'ENGINE': get_django_backend(),
                     'NAME': conn_utils.dbname,
                     'USER': conn_utils.user,
                     'PASSWORD': conn_utils.password,
